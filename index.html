@@ -3,131 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance Tracker</title>
+    <title>Modern Finance Tracker</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+        }
+
+        :root {
+            --primary-black: #000000;
+            --light-gray: #f5f5f5;
+            --border-gray: #e0e0e0;
+            --text-gray: #666666;
         }
 
         body {
-            background-color: white;
-            color: black;
+            background-color: var(--light-gray);
+            color: var(--primary-black);
             padding: 20px;
             max-width: 600px;
             margin: 0 auto;
+            min-height: 100vh;
         }
 
         .balance-card {
             background-color: white;
-            border: 2px solid black;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            border: 1px solid var(--border-gray);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 24px;
             text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .balance-card:hover {
+            transform: translateY(-2px);
         }
 
         .balance {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
         
         .margin-warning {
-            color: #666;
-            font-size: 14px;
-            margin-top: 10px;
+            color: var(--text-gray);
+            font-size: 15px;
+            margin-top: 12px;
+            line-height: 1.4;
         }
         
         .margin-limit {
-            color: black;
-            font-weight: bold;
+            color: var(--primary-black);
+            font-weight: 600;
         }
 
         .input-form {
             background-color: white;
-            border: 2px solid black;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            border: 1px solid var(--border-gray);
+            padding: 24px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 16px;
+            border: 2px solid var(--border-gray);
+            border-radius: 12px;
             font-size: 16px;
-            margin-top: 5px;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary-black);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
         }
 
         .button-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         button {
             flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
+            padding: 16px;
+            border: 2px solid var(--primary-black);
+            border-radius: 12px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            background-color: black;
+            transition: all 0.2s ease;
+            background-color: var(--primary-black);
             color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         button.expense {
             background-color: white;
-            color: black;
-            border: 2px solid black;
+            color: var(--primary-black);
         }
 
         .transactions {
             background-color: white;
-            border: 2px solid black;
-            padding: 20px;
-            border-radius: 10px;
+            border: 1px solid var(--border-gray);
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
         .transaction-item {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-gray);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-item:hover {
+            background-color: var(--light-gray);
         }
 
         .transaction-info {
             flex: 1;
         }
 
+        .transaction-description {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
         .transaction-amount {
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 16px;
         }
 
         .transaction-amount.income {
-            color: black;
+            color: var(--primary-black);
         }
 
         .transaction-amount.expense {
-            color: #666;
+            color: var(--text-gray);
         }
 
         .transaction-date {
-            font-size: 12px;
-            color: #666;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-gray);
         }
 
         @media (max-width: 480px) {
             body {
-                padding: 10px;
+                padding: 16px;
             }
+
+            .balance {
+                font-size: 32px;
+            }
+
+            button {
+                padding: 14px;
+            }
+        }
+
+        /* Add smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Add loading animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .transaction-item {
+            animation: fadeIn 0.3s ease;
         }
     </style>
 </head>
@@ -142,10 +217,10 @@
 
     <div class="input-form">
         <div class="input-group">
-            <input type="text" id="description" placeholder="Description">
+            <input type="text" id="description" placeholder="Description" autocomplete="off">
         </div>
         <div class="input-group">
-            <input type="number" id="amount" placeholder="Amount" step="0.01">
+            <input type="number" id="amount" placeholder="Amount" step="0.01" autocomplete="off">
         </div>
         <div class="button-group">
             <button onclick="addTransaction('income')">Add Income</button>
@@ -160,7 +235,10 @@
         let balance = parseFloat(localStorage.getItem('balance')) || 0;
 
         function updateDisplay() {
-            document.getElementById('balance').textContent = balance.toFixed(2);
+            document.getElementById('balance').textContent = balance.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
             
             // Update margin status
             const marginStatus = document.getElementById('margin-status');
@@ -168,13 +246,25 @@
                 marginStatus.textContent = 'Margin limit reached - expenses blocked';
                 marginStatus.style.color = 'black';
             } else {
-                const remaining = (20000 - balance).toFixed(2);
+                const remaining = (20000 - balance).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
                 marginStatus.textContent = `$${remaining} needed to reach margin limit`;
-                marginStatus.style.color = '#666';
+                marginStatus.style.color = 'var(--text-gray)';
             }
             
             const transactionsList = document.getElementById('transactionsList');
             transactionsList.innerHTML = '';
+            
+            if (transactions.length === 0) {
+                transactionsList.innerHTML = `
+                    <div class="empty-state">
+                        No transactions yet. Add your first transaction above.
+                    </div>
+                `;
+                return;
+            }
             
             transactions.forEach(transaction => {
                 const div = document.createElement('div');
@@ -182,11 +272,14 @@
                 
                 div.innerHTML = `
                     <div class="transaction-info">
-                        <div>${transaction.description}</div>
+                        <div class="transaction-description">${transaction.description}</div>
                         <div class="transaction-date">${transaction.date}</div>
                     </div>
                     <div class="transaction-amount ${transaction.type}">
-                        ${transaction.type === 'income' ? '+' : '-'}$${Math.abs(transaction.amount).toFixed(2)}
+                        ${transaction.type === 'income' ? '+' : '-'}$${Math.abs(transaction.amount).toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })}
                     </div>
                 `;
                 
@@ -195,7 +288,7 @@
         }
 
         function addTransaction(type) {
-            const description = document.getElementById('description').value;
+            const description = document.getElementById('description').value.trim();
             const amount = parseFloat(document.getElementById('amount').value);
             
             if (!description || !amount || isNaN(amount)) {
@@ -217,7 +310,11 @@
                 description,
                 amount,
                 type,
-                date: new Date().toLocaleDateString()
+                date: new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                })
             };
 
             transactions.unshift(transaction);
@@ -234,6 +331,16 @@
 
         // Initial display
         updateDisplay();
+
+        // Add keyboard support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const activeElement = document.activeElement;
+                if (activeElement.id === 'description' || activeElement.id === 'amount') {
+                    addTransaction('income');
+                }
+            }
+        });
     </script>
 </body>
 </html>
