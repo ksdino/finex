@@ -33,6 +33,17 @@
             font-size: 24px;
             font-weight: bold;
         }
+        
+        .margin-warning {
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .margin-limit {
+            color: black;
+            font-weight: bold;
+        }
 
         .input-form {
             background-color: white;
@@ -123,6 +134,10 @@
 <body>
     <div class="balance-card">
         <div class="balance">Balance: $<span id="balance">0.00</span></div>
+        <div class="margin-warning">
+            Margin Limit: <span class="margin-limit">$20,000</span>
+            <div id="margin-status"></div>
+        </div>
     </div>
 
     <div class="input-form">
@@ -146,6 +161,17 @@
 
         function updateDisplay() {
             document.getElementById('balance').textContent = balance.toFixed(2);
+            
+            // Update margin status
+            const marginStatus = document.getElementById('margin-status');
+            if (balance >= 20000) {
+                marginStatus.textContent = 'Margin limit reached - expenses blocked';
+                marginStatus.style.color = 'black';
+            } else {
+                const remaining = (20000 - balance).toFixed(2);
+                marginStatus.textContent = `$${remaining} needed to reach margin limit`;
+                marginStatus.style.color = '#666';
+            }
             
             const transactionsList = document.getElementById('transactionsList');
             transactionsList.innerHTML = '';
@@ -175,6 +201,15 @@
             if (!description || !amount || isNaN(amount)) {
                 alert('Please enter both description and amount');
                 return;
+            }
+
+            // Check if this expense would break the 20k margin limit
+            if (type === 'expense') {
+                const newBalance = balance - amount;
+                if (newBalance < 20000) {
+                    alert('Cannot add expense: This would break the 20k margin limit');
+                    return;
+                }
             }
 
             const transaction = {
